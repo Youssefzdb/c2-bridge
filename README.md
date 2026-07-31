@@ -1,143 +1,117 @@
-# C2 Bridge — Real-Time Remote Shell
+# C2 Bridge — Real-time Command & Control
 
-> Stream commands to a remote sandbox with **zero timeout** and **live output streaming**.
-
-## What is this?
-
-C2 Bridge is a lightweight command-and-control framework that lets you execute commands on a remote Base44 sandbox from your local machine (Kali Linux, or any OS with Python3). Unlike traditional SSH or reverse shells, C2 Bridge uses an HTTP-based relay (backend function) that:
-
-- **Never times out** — commands can run for minutes (tested up to 60s+, no timeout)
-- **Streams output in real-time** — you see output line-by-line as it's produced
-- **Bypasses firewalls/NAT** — all communication is over HTTPS
-- **Works behind proxies** — no direct connection needed between machines
+Autonomous AI agent platform that bridges a local Kali Linux machine with a cloud sandbox via a serverless C2 relay. Includes an Ollama-powered autonomous agent that can execute commands, iterate, and complete tasks independently.
 
 ## Architecture
 
 ```
-┌─────────────┐         ┌─────────────────┐         ┌──────────────┐
-│  Kali Linux │ ──HTTPS──│  c2Bridge API  │ ──poll── │  c2_worker   │
-│  kali_c2.py │         │  (Base44 func)  │         │  (sandbox)   │
-│             │ <─stream─│                 │ <─output─│              │
-└─────────────┘         └─────────────────┘         └──────────────┘
+┌─────────────┐         ┌──────────────────┐         ┌─────────────────┐
+│   Kali Linux │ ◄────► │  Base44 Backend   │ ◄────► │   Sandbox       │
+│   (Attacker) │  HTTP  │  (C2 Bridge API)  │  HTTP  │   (Worker +     │
+│              │        │  Entity Queue     │        │   Ollama Agent) │
+└─────────────┘         └──────────────────┘         └─────────────────┘
 ```
 
-1. **Kali** sends a command via POST to the c2Bridge API
-2. **c2Bridge** stores the command in a database (Command entity)
-3. **c2_worker.py** (running in sandbox) polls the bridge every 1 second
-4. Worker executes the command and streams output back to the bridge
-5. **Kali** polls the bridge and displays output in real-time (400ms polling)
+## Components
 
-## Files
+### C2 Bridge
+| File | Description |
+|------|-------------|
+| `c2_bridge.ts` | Serverless backend function — command queue via entity storage |
+| `c2_worker_v7.py` | Bulletproof sandbox worker — polls bridge, executes commands, returns output |
+| `c2_stream_shell.py` | Real-time reverse shell from sandbox to Kali (PTY, auto-reconnect, SSL) |
+| `kali_c2.py` | Kali-side C2 client — sends commands, receives streaming output |
 
-| File | Where | Purpose |
-|------|-------|---------|
-| `kali_c2.py` | Your local machine | Interactive shell client |
-| `c2_worker.py` | Remote sandbox | Background worker that executes commands |
-| `c2_bridge.ts` | Base44 backend function | HTTP relay API |
+### AI Agent (Ollama-powered)
+| File | Description |
+|------|-------------|
+| `agent.py` | **Sandbox Autonomous Agent (SAA)** — self-directed AI agent that loops, decides, and executes commands |
+| `chat.py` | Interactive chat with the agent in the sandbox |
+| `kali_chat.py` | Kali-side chat client — talks to sandbox agent via C2 bridge |
+| `kali_chat.sh` | Bash version of the Kali chat client |
 
-## Quick Start
+## Setup
 
-### On your Kali machine
-
+### 1. Backend (Base44 Sandbox)
 ```bash
-# 1. Clone the repo
+# Start Ollama with models
+ollama serve &
+ollama pull qwen2.5-coder:7b   # Fast mode
+ollama pull qwen2.5-coder:32b  # Smart mode
+
+# Start C2 worker (bulletproof, auto-restart)
+nohup python3 c2_worker_v7.py &
+
+# Optional: Start the autonomous agent
+python3 agent.py "Scan 10.10.10.1 for open ports and report findings"
+
+# Optional: Interactive chat
+python3 chat.py --model qwen2.5-coder:7b
+```
+
+### 2. Kali Linux (Attacker)
+```bash
+# Clone
 git clone https://github.com/Youssefzdb/c2-bridge.git
 cd c2-bridge
 
-# 2. Install dependencies
-pip3 install requests
-
-# 3. Make sure the sandbox worker is running
-#    Tell your agent: "شغل الـ worker"
-
-# 4. Launch the shell
+# Interactive C2 shell
 python3 kali_c2.py
+
+# Chat with sandbox agent
+python3 kali_chat.py
+
+# Or use bash version
+bash kali_chat.sh
 ```
 
-### Usage
+## C2 Worker v7 Features
 
-```
-╔══════════════════════════════════════════════════════╗
-║          C2 STREAMING SHELL → Base44 Sandbox          ║
-╠════════════════════════════════════════════════════════╣
-║  Bridge: https://elio-acd17217.base44.app/...        ║
-║  Poll:   400ms                                       ║
-║  Mode:   Streaming (near real-time)                   ║
-╚════════════════════════════════════════════════════════╝
+- **Recursion guard** — blocks `kali_*` scripts from running in sandbox (prevents deadlock)
+- **30s timeout** — any command that hangs gets killed
+- **`stdin=DEVNULL`** — commands waiting for input won't block the worker
+- **Auto-restart** — crashes automatically recover
+- **400ms polling** — near real-time command pickup
 
-[+] Sandbox worker: ONLINE
-[+] Ready! Type commands below.
-    exit/quit | clear | status | help
+## SAA Agent Features
 
-sandbox@c2:~$ whoami
-root
-sandbox@c2:~$ uname -a
-Linux modal 4.19.0-gvisor x86_64 GNU/Linux
-sandbox@c2:~$ nmap --version
-Nmap version 7.94SVN ...
-sandbox@c2:~$ exit
-```
+- **Autonomous loop** — executes commands, analyzes output, iterates until task is complete
+- **Multi-language** — speaks Arabic, French, English
+- **Cybersecurity expert** — pentesting, recon, vulnerability analysis
+- **Interactive & task modes** — `agent.py "task"` or `agent.py --interactive`
+- **Two models** — 7B (fast, 3 tok/s) or 32B (smart, 1.6 tok/s)
 
-### Built-in Commands
+## Usage Examples
 
-| Command | Description |
-|---------|-------------|
-| `exit` / `quit` | Disconnect from the shell |
-| `clear` | Clear the terminal screen |
-| `status` | Check if the sandbox worker is online |
-| `help` | Show help message |
-
-Any other command is executed on the sandbox as a bash command.
-
-## Configuration
-
-Edit the config section at the top of `kali_c2.py`:
-
-```python
-BRIDGE_URL = "https://elio-acd17217.base44.app/functions/c2Bridge"
-TOKEN = "shadow-core-c2-bridge-2026"
-POLL_INTERVAL = 0.4  # 400ms for near-real-time
-```
-
-You can also pass the bridge URL as an argument:
-
+### C2 Shell (Kali → Sandbox)
 ```bash
-python3 kali_c2.py --url https://your-bridge-url.base44.app/functions/c2Bridge
+sandbox@c2:~$ nmap -sS 10.10.10.1
+sandbox@c2:~$ python3 fasset_recon.py
+sandbox@c2:~$ curl -s https://target.com | head -50
 ```
 
-## Features
-
-- ✅ **No timeout** — commands run until completion (tested 60s+)
-- ✅ **Real-time streaming** — output appears line-by-line
-- ✅ **Interactive spinner** — visual feedback for long commands
-- ✅ **Worker status check** — know if the sandbox is online before sending
-- ✅ **Cloudflare bypass** — uses curl-based HTTP to avoid bot detection
-- ✅ **Auto-retry** — worker reconnects automatically on errors
-
-## Security Notes
-
-- The bridge uses a shared token for authentication
-- All communication is over HTTPS
-- The sandbox worker runs as root (sandbox environment)
-- Do NOT use this for unauthorized access — only on systems you own/control
-
-## Testing
-
-### Test streaming
+### Autonomous Agent (Sandbox)
 ```bash
-sandbox@c2:~$ for i in 1 2 3 4 5; do echo "Line $i"; sleep 1; done
+python3 agent.py "Find all subdomains of example.com using crt.sh"
+python3 agent.py "Scan 10.10.10.1 for open ports and identify services"
+python3 agent.py "Build a Python port scanner and test it on localhost"
 ```
 
-### Test long-running command (30s)
+### Chat (Interactive)
 ```bash
-sandbox@c2:~$ echo START && sleep 10 && echo 10s && sleep 10 && echo 20s && sleep 10 && echo DONE
+python3 chat.py
+You> what services are running on this machine?
+🤖 [executes ss -tlnp and responds with analysis]
 ```
 
-## License
+## Security
 
-MIT — Use freely for authorized security testing and research.
+- C2 bridge requires authentication token
+- Worker blocks recursive commands
+- All communication over HTTPS
+- Optional SSL for reverse shell
 
 ## Author
 
-**Youssef Zaidi** — Penetration Tester & Offensive Security Specialist  
-GitHub: [@Youssefzdb](https://github.com/Youssefzdb)
+**Youssef Zaidi** — Cybersecurity Specialist (Penetration Testing & Offensive Security)
+- GitHub: [@Youssefzdb](https://github.com/Youssefzdb)
