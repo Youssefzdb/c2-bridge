@@ -1,6 +1,0 @@
-{
-  "id": "nuclei_test",
-  "command": "nuclei -u https://example.com -silent -timeout 5 -nc 2>&1 | head -20",
-  "status": "pending",
-  "timestamp": "2026-07-31"
-}
