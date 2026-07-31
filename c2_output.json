@@ -1,0 +1,7 @@
+{
+  "id": "test123",
+  "command": "echo KALI_GITHUB_RELAY && nmap --version | head -2 && which nuclei sqlmap ffuf gobuster nikto",
+  "output": "KALI_GITHUB_RELAY\nNmap version 7.95 ( https://nmap.org )\nPlatform: x86_64-unknown-linux-gnu\n/usr/local/bin/nuclei\n/usr/local/bin/sqlmap\n/usr/local/bin/ffuf\n/usr/local/bin/gobuster\n/usr/local/bin/nikto\n",
+  "status": "completed",
+  "timestamp": "2026-07-31T13:15:51.107345"
+}
