@@ -1,0 +1,6 @@
+{
+  "id": "test123",
+  "command": "echo KALI_GITHUB_RELAY && nmap --version | head -2 && which nuclei sqlmap ffuf gobuster nikto",
+  "status": "pending",
+  "timestamp": "2026-07-31T14:15:00"
+}
