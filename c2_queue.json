@@ -1,6 +1,0 @@
-{
-  "id": "c9b440b1",
-  "command": "python3 kali_chat.py \"scan [example.com](https://example.com) with nmap\"",
-  "status": "pending",
-  "timestamp": "2026-07-31T19:24:39.616251"
-}
