@@ -1,0 +1,6 @@
+{
+  "id": "nmap_test",
+  "command": "nmap -sT -Pn -p 443,80,22,8080 --open --host-timeout 15s example.com 2>&1",
+  "status": "pending",
+  "timestamp": "2026-07-31T14:16:00"
+}
