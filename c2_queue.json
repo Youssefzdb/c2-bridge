@@ -1,0 +1,6 @@
+{
+  "id": "final_test",
+  "command": "echo \"=== KALI SANDBOX READY ===\" && uname -a && echo \"\" && echo \"Tools:\" && which nmap sqlmap nuclei ffuf gobuster nikto curl openssl && echo \"\" && echo \"GitHub relay: NO CLOUDFLARE\"",
+  "status": "pending",
+  "timestamp": "2026-07-31"
+}
