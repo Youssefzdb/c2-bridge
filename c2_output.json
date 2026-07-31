@@ -1,7 +1,7 @@
 {
   "id": "c9b440b1",
   "command": "python3 kali_chat.py \"scan [example.com](https://example.com) with nmap\"",
-  "output": "[TIMEOUT: 300s \u2014 killed]",
+  "output": "\n\u001b[95m\ud83e\udd16 Sending to SAA Agent...\u001b[0m\n\u001b[93m  [!] Queue busy \u2014 waiting for agent to process previous message...\u001b[0m\n\u001b[2m  ...still waiting (0s)\u001b[0m\n\u001b[2m  ...still waiting (20s)\u001b[0m\n\u001b[2m  ...still waiting (40s)\u001b[0m\n\u001b[2m  ...still waiting (60s)\u001b[0m\n\u001b[2m  ...still waiting (80s)\u001b[0m\n\u001b[2m  ...still waiting (100s)\u001b[0m\n\u001b[91m  [!] Queue still busy after 120s. Agent may be offline.\u001b[0m\n\u001b[91m  [FAILED] Could not send message\u001b[0m\n",
   "status": "completed",
-  "timestamp": "2026-07-31T19:29:44.049505"
+  "timestamp": "2026-07-31T19:30:25.954643"
 }
