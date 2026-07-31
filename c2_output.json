@@ -1,7 +1,7 @@
 {
-  "id": "4af71776",
-  "command": "which opencode",
-  "output": "/usr/local/bin/opencode\n",
+  "id": "0e27eaf9",
+  "command": "cd /usr/local/bin/opencode",
+  "output": "/bin/sh: 1: cd: can't cd to /usr/local/bin/opencode\n",
   "status": "completed",
-  "timestamp": "2026-07-31T13:25:24.290914"
+  "timestamp": "2026-07-31T13:25:39.362487"
 }
