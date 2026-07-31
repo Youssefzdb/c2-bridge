@@ -1,7 +1,7 @@
 {
-  "id": "final_test",
-  "command": "echo \"=== KALI SANDBOX READY ===\" && uname -a && echo \"\" && echo \"Tools:\" && which nmap sqlmap nuclei ffuf gobuster nikto curl openssl && echo \"\" && echo \"GitHub relay: NO CLOUDFLARE\"",
-  "output": "=== KALI SANDBOX READY ===\nLinux modal 4.19.0-gvisor #1 SMP Sun Jan 10 15:06:54 PST 2016 x86_64 GNU/Linux\n\nTools:\n/usr/local/bin/nmap\n/usr/local/bin/sqlmap\n/usr/local/bin/nuclei\n/usr/local/bin/ffuf\n/usr/local/bin/gobuster\n/usr/local/bin/nikto\n/usr/bin/curl\n/usr/bin/openssl\n\nGitHub relay: NO CLOUDFLARE\n",
+  "id": "2f51bd90",
+  "command": "ls",
+  "output": "LICENSE\nREADME.md\nREADME_new.md\nagent.log\nagent.py\nagent_test.log\nagent_test_7b.log\napi_vuln_hunt.py\napi_vuln_hunt.txt\napi_vuln_output.txt\nc2_bridge.ts\nc2_listener.py\nc2_listener_test.log\nc2_shell_test.log\nc2_stream_shell.py\nc2_worker.log\nc2_worker.py\nc2_worker.sh\nc2_worker_stdout.log\nc2_worker_v6.py\nc2_worker_v6_stdout.log\nc2_worker_v7.py\nc2_worker_v7_stdout.log\nc2_worker_v8.py\nc2_worker_v8_stdout.log\nc2_worker_v9.log\nc2_worker_v9.py\nchat.py\nfasset_recon.py\nfasset_recon_full.txt\nfasset_recon_output.txt\nfasset_vulnerability_report.md\nfunctions\nkali_c2.py\nkali_c2_setup.sh\nkali_chat.py\nkali_chat.sh\nkali_shell.py\nkali_shell_v9.py\nmain_deep_output.txt\nmain_deep_vuln.py\nmain_deep_vuln.txt\nmodel_pull.log\nmodel_pull_7b.log\nopencode\npentest_agent.py\npentest_findings.log\npentest_reports\npentest_run.log\npentest_toolkit.py\nrequirements.txt\ntmux-client-1975.log\ntrading_vuln_hunt.py\ntrading_vuln_hunt.txt\ntrading_vuln_output.txt\n",
   "status": "completed",
-  "timestamp": "2026-07-31T13:21:38.191432"
+  "timestamp": "2026-07-31T13:25:06.803064"
 }
